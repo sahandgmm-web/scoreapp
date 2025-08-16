@@ -1,0 +1,111 @@
+!DOCTYPE html
+html lang=fa
+head
+meta charset=UTF-8
+titleاپ نمره کلاسtitle
+style
+  body { font-family Arial, sans-serif; direction rtl; text-align right; padding 20px; background-color #f7f7f7; }
+  table { width 100%; border-collapse collapse; margin-top 20px; }
+  th, td { border 1px solid #ccc; padding 8px; }
+  th { background-color #eee; }
+  input[type=text], input[type=number], input[type=password] { padding 5px; width 200px; }
+  button { padding 5px 10px; margin-top 10px; cursor pointer; }
+  .hidden { display none; }
+style
+head
+body
+
+h2ورود به اپ نمره کلاسh2
+div id=loginDiv
+  ایمیل input type=text id=emailbr
+  پسورد input type=password id=passwordbr
+  button onclick=login()ورودbutton
+div
+
+div id=appDiv class=hidden
+  h2جدول نمراتh2
+  table id=scoreTable
+    thead
+      tr
+        thنام دانش‌آموزth
+        thتمرین‌هاth
+        thفعالیت کلاسیth
+        thآزمونth
+        th id=editHeaderویرایشth
+      tr
+    thead
+    tbody id=tableBodytbody
+  table
+  button id=addRowBtn onclick=addRow()اضافه کردن دانش‌آموزbutton
+div
+
+script
+ داده‌های نمونه
+let scores = [
+  {nameعلی, practice18, activity17, exam19},
+  {nameسارا, practice20, activity19, exam18}
+];
+
+let currentUser = {email , role };  role admin یا parent
+
+const users = [
+  {emailadmin@gmail.com, password123, roleadmin},
+  {emailparent1@gmail.com, password123, roleparent},
+  {emailparent2@gmail.com, password123, roleparent}
+];
+
+function login() {
+  const email = document.getElementById(email).value;
+  const password = document.getElementById(password).value;
+  const user = users.find(u = u.email===email && u.password===password);
+  if(user) {
+    currentUser = user;
+    document.getElementById(loginDiv).classList.add(hidden);
+    document.getElementById(appDiv).classList.remove(hidden);
+    if(user.role===parent) {
+      document.getElementById(editHeader).style.display = none;
+      document.getElementById(addRowBtn).style.display = none;
+    }
+    renderTable();
+  } else {
+    alert(ایمیل یا پسورد اشتباه است);
+  }
+}
+
+function renderTable() {
+  const tbody = document.getElementById(tableBody);
+  tbody.innerHTML = ;
+  scores.forEach((s, index) = {
+    const tr = document.createElement(tr);
+    tr.innerHTML = `
+      td${s.name}td
+      td${currentUser.role===admin  `input type=number value=${s.practice} onchange=updateScore(${index}, 'practice', this.value)`  s.practice}td
+      td${currentUser.role===admin  `input type=number value=${s.activity} onchange=updateScore(${index}, 'activity', this.value)`  s.activity}td
+      td${currentUser.role===admin  `input type=number value=${s.exam} onchange=updateScore(${index}, 'exam', this.value)`  s.exam}td
+      td${currentUser.role===admin  `button onclick=deleteRow(${index})حذفbutton`  }td
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateScore(index, field, value) {
+  scores[index][field] = Number(value);
+}
+
+function addRow() {
+  const name = prompt(نام دانش‌آموز);
+  if(name) {
+    scores.push({namename, practice0, activity0, exam0});
+    renderTable();
+  }
+}
+
+function deleteRow(index) {
+  if(confirm(آیا مطمئن هستید؟)) {
+    scores.splice(index,1);
+    renderTable();
+  }
+}
+script
+body
+html
